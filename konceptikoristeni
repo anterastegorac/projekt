@@ -18,7 +18,7 @@ Zahtjev 2 Odabir konkretnih tipova podataka za rad sa cjelobrojnim i realnim kon
 #define FILENAME "rezultati.bin"
 
 Zahtjev 3/4/5 3.Odabir konretnih slozenih tipova podataka za stanje ploce. 4.Primjena typedef sa strukturama i unijama. 5. Imenovanje identifikaora:PascalCase sa strukture, camelCase za varijable unutra linije/strukture
-Datoteka header.h, 13 linija u kodu
+Datoteka header.h, 13 linija u kodu !5 treba prepraviti!!!, odabrati jedan tip od this ne kombinaciju kako vec jesam
 
 typedef struct {
 	char ime[MAX_NAME];
