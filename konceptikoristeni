@@ -1,0 +1,101 @@
+Zahtijev 1 Implementiran CRUD. Datoteka funkcije.c, 17 linija u kodu
+
+void CRUD_create(const Statistika* s) {
+	if (s == NULL)return;
+	FILE* fp = fopen(FILENAME, "ab");
+	if (fp == NULL) {
+		perror("Pogreska pri otvaranju datoteke");
+		return;
+	}
+	fwrite(s, sizeof(Statistika), 1, fp);
+	fclose(fp);
+}
+
+Zahtjev 2 Odabir konkretnih tipova podataka za rad sa cjelobrojnim i realnim konstantama. Datoteka header.h, 6 linija koda
+
+#define MAX_NAME 50
+#define BOARD_SIZE 3
+#define FILENAME "rezultati.bin"
+
+Zahtjev 3/4/5 3.Odabir konretnih slozenih tipova podataka za stanje ploce. 4.Primjena typedef sa strukturama i unijama. 5. Imenovanje identifikaora:PascalCase sa strukture, camelCase za varijable unutra linije/strukture
+Datoteka header.h, 13 linija u kodu
+
+typedef struct {
+	char ime[MAX_NAME];
+	int pobjede;
+	int porazi;
+}Statistika;
+
+4. zahtjev je primjenjen i ovdje:
+
+typedef enum {ILZAZ=0,IGRAJ,PRIKAZ_REZULTATA,PRETRAGA,BRISANJE,SORTIRANJE}Izbornik;
+typedef enum {PRAZNO=0,IGRAC_X,IGRAC_O}Polje;
+
+Zahtjev 6 Primjena kljucne rijeci static za globalne varijable. Funkcije.c linija 7
+
+static int trenutniBrojZapisa = 0;
+
+Zahtjev 7 Organizacija izvornog koda: Implementacija fukncija.
+
+Ovdje necu zaljepiti jer je cijela datoteka funkcije.c implementacija funkcija, uz to datoteke su razdvojene u header.h, funkcije.c i main.c
+
+Zahtjev 8 Primjena extern kljucne rijeci za globalne varijable, header.h 25 linija koda
+
+extern int brojZapisa;
+
+Zahtjev 9 Makro ili inline funkcije
+
+static inline void ocistiEkran() {
+	printf("\033[H\033[J");
+}
+
+Zahtjev 11 Enum ili makro simboli kod izbornika, header.h 10 linija koda
+
+typedef enum {ILZAZ=0,IGRAJ,PRIKAZ_REZULTATA,PRETRAGA,BRISANJE,SORTIRANJE}Izbornik;
+typedef enum {PRAZNO=0,IGRAC_X,IGRAC_O}Polje;
+
+Zahtjev 13 Generalno upotreba struktura i funkcija. header.h linija 19
+
+typedef struct {
+	Polje ploca[BOARD_SIZE][BOARD_SIZE];
+	Statistika* igrac1;
+	Statistika* igrac2;
+}Igra;
+
+Zahtjev 14/18 Zaštita parametra kod svih funkcija(provjera ptr), ujedno zadovoljava uvjet 18 Sigurno brisanje memorije koja je dinamicki zauzeta. funkcije.c linija 10
+
+void oslobodiMemoriju(void** ptr) {
+	if (ptr != NULL && *ptr != NULL) {
+		free(*ptr);
+		*ptr = NULL;
+	}
+}
+
+Zahtjev 16/17 Koristiti dinamicko zauzminje memorije za bilo koji tip podataka, ujedno i 17 Koristiti funkciju malloc() za alokaciju niza struktura. funkcije.c linija 58
+
+Statistika* niz = (Statistika*)malloc(n * sizeof(Statistika));
+
+Zahtjev 18 Sigurno brisanje i sprjecavanje double free pogreske, funkcije.c linija 68
+
+oslobodiMemoriju((void**)&niz);
+
+Zahtjev 19 Koristiti tekstualnu ili binarnu provjeru pokazivaca i zatvaranje datoteke, funkcije.c linija 19,55
+
+FILE* fp = fopen(FILENAME, "ab");
+
+Zahtjev 20 Koristiti perror,fseek,rewind. funkcije.c linija 19
+
+perror("Pogreska pri otvaranju datoteke");
+
+rewind(fp);
+
+Zahtjev 21 Koristiti funkciju remove() po potrebi. funkcije.c linija 89
+
+void CRUD_delete() {
+	if (remove(FILENAME) == 0) {
+		printf("Datoteka obrisana.\n");
+	}
+	else {
+		perror("Pogreska pri brisanju");
+	}
+}
