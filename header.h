@@ -7,9 +7,9 @@
 #define BOARD_SIZE 3
 #define FILENAME "rezultati.bin"
 
-typedef enum {ILZAZ=0,IGRAJ,PRIKAZ_REZULTATA,PRETRAGA,BRISANJE,SORTIRANJE}Izbornik;
-typedef enum {PRAZNO=0,IGRAC_X,IGRAC_O}Polje;
- 
+typedef enum { IZLAZ = 0, IGRAJ, PRIKAZ_REZULTATA, PRETRAGA, BRISANJE, SORTIRANJE }Izbornik;
+typedef enum { PRAZNO = 0, IGRAC_X, IGRAC_O }Polje;
+
 typedef struct {
 	char ime[MAX_NAME];
 	int pobjede;
@@ -24,14 +24,18 @@ typedef struct {
 
 extern int brojZapisa;
 
-void prikaziIzbornik(void);
 void pokreniIgru(void);
+void inicijalizirajPlocu(Igra* igra);
+void prikaziPlocu(const Igra* igra);
+int provjeriPobjednika(const Igra* igra, Polje igrac);
+int provjeriNerjeseno(const Igra* igra);
+void spremiRezultat(Statistika* pobjednik, Statistika* gubitnik);
 void CRUD_create(const Statistika* s);
 void CRUD_read(void);
 void CRUD_update(const char* ime, int pobjeda);
 void CRUD_delete(void);
 int usporediStatistiku(const void* a, const void* b);
-void sortirajRezultate(void);
+void sortirajIgrace(void);
 void pretraziRezultat(const char* ime);
 void oslobodiMemoriju(void** ptr);
 
