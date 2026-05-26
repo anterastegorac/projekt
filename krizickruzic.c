@@ -1,95 +1,51 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include "header.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
 
+int main() {
+    int izbor;
+    char ime[50];
 
-#define MAX_NAME 50
-#define BOARD_SIZE 3
-#define FILENAME "igra_podaci.bin"
+    do {
+        printf("\n--- KRIZIC KRUZIC ---\n");
+        printf("1. Igraj\n");
+        printf("2. Prikazi rezultate\n");
+        printf("3. Pretrazi rezultat\n");
+        printf("4. Obrisi povijest\n");
+        printf("5. Sortiraj rezultate (A-Z)\n");
+        printf("0. Izlaz\n");
+        printf("Vas izbor: ");
 
+        if (scanf("%d", &izbor) != 1) {
+            while (getchar() != '\n');
+            continue;
+        }
 
-//koncept 9
-#define IS_POINTER_NULL(p) ((p)==NULL)
+        switch ((Izbornik)izbor) {
+        case IGRAJ:
+            pokreniIgru();
+            break;
+        case PRIKAZ_REZULTATA:
+            CRUD_read();
+            break;
+        case PRETRAGA:
+            printf("Unesite ime igraca: ");
+            scanf("%49s", ime);
+            pretraziRezultat(ime);
+            break;
+        case BRISANJE:
+            CRUD_delete();
+            break;
+        case SORTIRANJE:
+            sortirajIgrace();
+            break;
+        case IZLAZ:
+            printf("Pozdrav!\n");
+            break;
+        default:
+            printf("Nevazeca opcija.\n");
+        }
+    } while (izbor != IZLAZ);
 
-//4 11
-typedef enum {
-	IZLAZ=0,
-	IGRAJ,
-	PRIKAZ_SVIH,
-	PRETRAGA,
-	SORTIRANJE,
-	BRISANJE_DATOTEKE
-}Izbornik;
-
-typedef enum{PRAZNO=0,X,0};
-Stanje;
-
-//3 4
-typedef struct {
-	char ime[MAX_NAME];
-	int pobjede;
-	int porazi;
-	union {
-		float postotakPobjeda;
-		int ukupnoOdigrano;
-	}dodatnaStatistika;
-}Igrac;
-
-//13
-typedef struct {
-	Stanje ploca[BOARD_SIZE][BOARD_SIZE];
-	//15 12
-	Igrac* trenutniIgrac;
-}krizicKruzic;
-
-//8
-
-extern int globalniBrojZapisa;
-int globalniBrojZapisa = 0;
-
-void CRUD_create(const Igrac* igrac);
-void CRUD_read();
-void CRUD_delete();
-void oslobodiMemoriju(void** ptr);
-void usporediIgrace(const void* a, const void* b);
-void sortirajIgrace();
-static inline void pozdrav() {
-	printf("Dobrodosli u Krizic kruzic crud\n");
-}
-
-//6
-static int sessionCounter = 0;
-
-//18
-void oslobodiMemoriju(void** ptr) {
-	if (ptr != NULL && *ptr != NULL) {
-		free(*ptr);
-		*ptr = NULL;
-	}
-}
-
-//1
-void CRUD_create(const Igrac* igrac) {
-	//14
-	if (IS_POINTER_NULL(igrac)) return;
-
-	FILE* fp = fopen(FILENAME, "ab");
-	if (!fp) {
-		perror("Greska pri otvaranju datoteke");
-		return;
-	}
-	fwrite(igrac, sizeof(Igrac), 1, fp);
-	fclose(fp);
-	globalniBrojZapisa++;
-}
-
-//1 19 20
-void CRUD_read() {
-	FILE* fp = fopen(FILENAME, "rb");
-	if (!fp) {
-		if (errno == ENOENT)
-			printf("Datoteka ne postoji\n");
-		return;
-	}
+    return 0;
 }
