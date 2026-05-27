@@ -49,10 +49,18 @@ static inline void ocistiEkran() {
 	printf("\033[H\033[J");
 }
 
+Zahtjev 10 Izbornik main.c
+
+do while petlja sa ispisom opcija
+
 Zahtjev 11 Enum ili makro simboli kod izbornika, header.h 10 linija koda
 
 typedef enum {ILZAZ=0,IGRAJ,PRIKAZ_REZULTATA,PRETRAGA,BRISANJE,SORTIRANJE}Izbornik;
 typedef enum {PRAZNO=0,IGRAC_X,IGRAC_O}Polje;
+
+Zahtjev 12 Pokazivaci
+
+Statistika* void** FILE*, koriste se u svim filovima
 
 Zahtjev 13 Generalno upotreba struktura i funkcija. header.h linija 19
 
@@ -71,6 +79,11 @@ void oslobodiMemoriju(void** ptr) {
 	}
 }
 
+Zahtjev 15 Staticki niz header.h linija 20 i linija 14
+
+Polje ploca[BOARD_SIZE][BOARD_SIZE];
+char ime[MAX_NAME];
+
 Zahtjev 16/17 Koristiti dinamicko zauzminje memorije za bilo koji tip podataka, ujedno i 17 Koristiti funkciju malloc() za alokaciju niza struktura. funkcije.c linija 58
 
 Statistika* niz = (Statistika*)malloc(n * sizeof(Statistika));
@@ -83,13 +96,15 @@ Zahtjev 19 Koristiti tekstualnu ili binarnu provjeru pokazivaca i zatvaranje dat
 
 FILE* fp = fopen(FILENAME, "ab");
 
-Zahtjev 20 Koristiti perror,fseek,rewind. funkcije.c linija 19
+Zahtjev 20 Koristiti perror,fseek,rewind. funkcije.c linija 19,61
 
 perror("Pogreska pri otvaranju datoteke");
 
 rewind(fp);
 
-Zahtjev 21 Koristiti funkciju remove() po potrebi. funkcije.c linija 89
+fseek(fp, 0, SEEK_END);
+
+Zahtjev 21 Koristiti funkciju remove() po potrebi. funkcije.c linija 297
 
 void CRUD_delete() {
 	if (remove(FILENAME) == 0) {
@@ -99,3 +114,44 @@ void CRUD_delete() {
 		perror("Pogreska pri brisanju");
 	}
 }
+
+Zahtjev 22  Upravljanje pogreskama. funkcije.c linije 21,302,5
+
+perror("Pogreska pri otvaranju datoteke");
+perror("Pogreska pri brisanju");
+
+Zahtjev 23 Sortiranje funkcije.c linija 75,105
+
+qsort(niz, n, sizeof(Statistika), usporediStatistiku);
+qsort(niz, n, sizeof(Statistika), usporediStatistiku);
+
+Zahtjev 24 Pretrazivanje funkcije.c linija 46,107
+
+int binaraPretragaRekurzivna(Statistika* niz, int lijevo, int desno, const char* ime) {
+	if (desno >= lijevo) {
+		int sredina = lijevo + (desno - lijevo) / 2;
+		int res = strcmp(niz[sredina].ime, ime);
+		if (res == 0)return sredina;
+		if (res > 0)return binaraPretragaRekurzivna(niz, lijevo, sredina - 1, ime);
+		return binaraPretragaRekurzivna(niz, sredina + 1, desno, ime);
+	}
+	return -1;
+
+int idx = binaraPretragaRekurzivna(niz, 0, n - 1, ime);
+
+Zahtjev 25 Rekurzija funkcije.c linija 46-55
+
+int binaraPretragaRekurzivna(Statistika* niz, int lijevo, int desno, const char* ime) {
+	if (desno >= lijevo) {
+		int sredina = lijevo + (desno - lijevo) / 2;
+		int res = strcmp(niz[sredina].ime, ime);
+		if (res == 0)return sredina;
+		if (res > 0)return binaraPretragaRekurzivna(niz, lijevo, sredina - 1, ime);
+		return binaraPretragaRekurzivna(niz, sredina + 1, desno, ime);
+	}
+	return -1;
+
+Zahtjev 26 Pokazivac na funkciju funkcije.c linija 46,107
+
+qsort(niz, n, sizeof(Statistika), usporediStatistiku);
+qsort(niz, n, sizeof(Statistika), usporediStatistiku);
